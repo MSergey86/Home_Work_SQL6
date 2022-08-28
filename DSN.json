@@ -1,0 +1,6 @@
+{
+"driver":"postgresql",
+"login":"postgres",
+"password":"0000",
+"name_db":"HW_SQL5"
+}

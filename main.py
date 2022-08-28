@@ -7,19 +7,13 @@ from models import create_tables, Publisher, Shop, Book, Stock, Sale
 
 if __name__ == '__main__':
 
-    with open('DSN.txt', 'r') as file:
-        i = 0
-        for line in file:
-            a = line.strip()
-            if i == 0:
-                driver = a
-            if i == 1:
-                login = a
-            if i == 2:
-                password = a
-            if i == 3:
-                name_db = a
-            i += 1
+    with open('DSN.json', 'r', encoding='utf-8') as file:
+        data = file.read()
+        js = json.loads(data)
+        driver = js["driver"]
+        login = js["login"]
+        password = js["password"]
+        name_db = js["name_db"]
 
     DSN = f"{driver}://{login}:{password}@localhost:5432/{name_db}"
 
@@ -56,6 +50,11 @@ if __name__ == '__main__':
         name_publish = input("Введите имя издателя: ")
         for pub in session.query(Publisher).filter(Publisher.name.like(f'%{name_publish}%')).all():
             print(pub)
+
+    for book in session.query(Book).join(Stock.book).filter(Book.id_publisher == id_publish).all():
+        for p in session.query(Stock).filter(Stock.id_book == book.id).all():
+            for name_shop in session.query(Shop).filter(Shop.id == p.id_shop).all():
+                print(name_shop.name)
 
 
     session.close()

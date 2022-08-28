@@ -20,7 +20,7 @@ class Book(Base):
     publisher = relationship(Publisher, backref="books")
 
     def __str__(self):
-        return f'publisher {self.id}: {self.title}'
+        return f'book {self.id}: {self.title}'
 
 
 class Shop(Base):
@@ -29,7 +29,7 @@ class Shop(Base):
     name = sq.Column(sq.String(length=50), unique=True)
 
     def __str__(self):
-        return f'publisher {self.id}: {self.name}'
+        return f'shop {self.id}: {self.name}'
 
 class Stock(Base):
     __tablename__ = "stock"
@@ -42,20 +42,20 @@ class Stock(Base):
     shop = relationship(Shop, backref="stock")
 
     def __str__(self):
-        return f'publisher {self.id}: {self.count}'
+        return f'stock {self.id}: {self.count}'
 
 class Sale(Base):
     __tablename__ = "sale"
     id = sq.Column(sq.Integer, primary_key=True)
-    price = sq.Column(sq.Float[2], nullable=False)
+    price = sq.Column(sq.DECIMAL, nullable=False)
     count = sq.Column(sq.Integer, nullable=False)
     date_sale = sq.Column(sq.DateTime, nullable=False)
     id_stock = sq.Column(sq.Integer, sq.ForeignKey("stock.id"), nullable=False)
 
-    stock = relationship(Stock, backref="sale")
+    stock = relationship(Stock, backref="sales")
 
     def __str__(self):
-        return f'publisher {self.id}: ({self.count}, {self.count}, {self.date_sale})'
+        return f'sale {self.id}: ({self.count}, {self.count}, {self.date_sale})'
 
 def create_tables(engine):
     Base.metadata.drop_all(engine)
